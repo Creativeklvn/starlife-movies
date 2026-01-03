@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/starlife-movies/",
+   base: "./", // <-- THIS fixes asset 404s
   server: {
     host: true,
     port: 5173

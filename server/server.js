@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import fetch from "node-fetch"; // ✅ Add this
 
 dotenv.config({ path: "./.env" });
 
@@ -11,6 +12,7 @@ const API_KEY = process.env.YOUTUBE_API_KEY;
 
 app.use(cors());
 
+// Safety check
 if (!API_KEY) {
   console.error("❌ Missing YOUTUBE_API_KEY in .env");
   process.exit(1);

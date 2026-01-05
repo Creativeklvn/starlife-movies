@@ -5,24 +5,48 @@ export default function HeroSlider() {
   const [videos, setVideos] = useState([]);
   const [index, setIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/videos?q=trending movie trailers`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.items) return;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-        const videosData = data.items.map((item) => ({
-          id: item.id.videoId,
-          title: item.snippet.title,
-          thumbnail:
-            item.snippet.thumbnails.maxres?.url ||
-            item.snippet.thumbnails.high?.url,
-        }));
+    if (!backendUrl) {
+      console.error("❌ VITE_BACKEND_URL is not defined");
+      setError("Backend not configured");
+      return;
+    }
+
+    fetch(
+      `${backendUrl}/videos?q=${encodeURIComponent(
+        "trending movie trailers"
+      )}`
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!data?.items) return;
+
+        const videosData = data.items
+          .filter((item) => item.id?.videoId)
+          .map((item) => ({
+            id: item.id.videoId,
+            title: item.snippet.title,
+            thumbnail:
+              item.snippet.thumbnails?.maxres?.url ||
+              item.snippet.thumbnails?.high?.url ||
+              item.snippet.thumbnails?.medium?.url,
+          }));
 
         setVideos(videosData);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        setError("Failed to load videos");
+      });
   }, []);
 
   useEffect(() => {
@@ -45,9 +69,12 @@ export default function HeroSlider() {
     setIndex((prev) => (prev + 1) % videos.length);
   };
 
+  if (error) {
+    return <p className="error">{error}</p>;
+  }
+
   return (
     <>
-      {/* Render ONLY when videos are ready */}
       {videos.length > 0 && (
         <section className="hero-slider">
           <div className="hero-slide">

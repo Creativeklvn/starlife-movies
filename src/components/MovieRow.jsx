@@ -4,38 +4,62 @@ import "../styles.css";
 export default function MovieRow({ title, query }) {
   const [videos, setVideos] = useState([]);
   const [activeVideo, setActiveVideo] = useState(null);
+  const [error, setError] = useState(null);
   const rowRef = useRef(null);
 
   useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/videos?q=${encodeURIComponent(query)}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.items) return;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-        const rowVideos = data.items.map((item) => ({
-          id: item.id.videoId,
-          title: item.snippet.title,
-          thumbnail: item.snippet.thumbnails.high?.url,
-        }));
+    if (!backendUrl) {
+      console.error("❌ VITE_BACKEND_URL is not defined");
+      setError("Backend not configured");
+      return;
+    }
+
+    fetch(
+      `${backendUrl}/videos?q=${encodeURIComponent(query)}`
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!data?.items) return;
+
+        const rowVideos = data.items
+          .filter((item) => item.id?.videoId)
+          .map((item) => ({
+            id: item.id.videoId,
+            title: item.snippet.title,
+            thumbnail:
+              item.snippet.thumbnails?.high?.url ||
+              item.snippet.thumbnails?.medium?.url,
+          }));
 
         setVideos(rowVideos);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        setError("Failed to load videos");
+      });
   }, [query]);
 
   const scrollLeft = () => {
-    rowRef.current.scrollBy({ left: -400, behavior: "smooth" });
+    rowRef.current?.scrollBy({ left: -400, behavior: "smooth" });
   };
 
   const scrollRight = () => {
-    rowRef.current.scrollBy({ left: 400, behavior: "smooth" });
+    rowRef.current?.scrollBy({ left: 400, behavior: "smooth" });
   };
+
+  if (error) {
+    return <p className="error">{error}</p>;
+  }
 
   return (
     <>
-      {/* Render ONLY when videos exist */}
       {videos.length > 0 && (
         <div className="movie-row">
           <h2>{title}</h2>
@@ -52,7 +76,11 @@ export default function MovieRow({ title, query }) {
                   className="movie-card"
                   onClick={() => setActiveVideo(video.id)}
                 >
-                  <img src={video.thumbnail} alt={video.title} />
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    loading="lazy"
+                  />
                   <p>{video.title}</p>
                 </div>
               ))}
@@ -77,12 +105,12 @@ export default function MovieRow({ title, query }) {
             </button>
 
             <iframe
-              src={`https://www.youtube.com/embed/${activeVideo}?autoplay=1`}
+              src={`https://www.youtube.com/embed/${activeVideo}?autoplay=1&rel=0`}
               title="YouTube video player"
               frameBorder="0"
               allow="autoplay; encrypted-media"
               allowFullScreen
-            ></iframe>
+            />
           </div>
         </div>
       )}

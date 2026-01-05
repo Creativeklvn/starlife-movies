@@ -1,49 +1,38 @@
-// server/server.js
 import express from "express";
+import fetch from "node-fetch";
 import cors from "cors";
-import dotenv from "dotenv";
-import fetch from "node-fetch"; // ✅ Add this
-
-dotenv.config({ path: "./.env" });
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-const API_KEY = process.env.YOUTUBE_API_KEY;
-
 app.use(cors());
 
-// Safety check
-if (!API_KEY) {
-  console.error("❌ Missing YOUTUBE_API_KEY in .env");
-  process.exit(1);
-}
-
 app.get("/videos", async (req, res) => {
-  const query = req.query.q || "movie trailers";
-  const pageToken = req.query.pageToken || "";
-
   try {
-    const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
-        query
-      )}&type=video&maxResults=10&pageToken=${pageToken}&key=${API_KEY}`
-    );
+    const q = req.query.q;
+    if (!q) return res.status(400).json({ error: "Missing query" });
 
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: "YouTube API key missing" });
+    }
+
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=${encodeURIComponent(
+      q
+    )}&key=${apiKey}`;
+
+    const response = await fetch(url);
     const data = await response.json();
 
     if (data.error) {
-      return res.status(500).json({ error: data.error.message });
+      return res.status(500).json(data.error);
     }
 
     res.json(data);
   } catch (err) {
-    res.status(500).json({
-      error: "Failed to fetch videos",
-      details: err.message,
-    });
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+app.listen(process.env.PORT || 5000, () => {
+  console.log("Server running");
 });

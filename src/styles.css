@@ -518,3 +518,24 @@ align-content: center;
   margin-bottom: 20px;
 }
 
+.app-loader {
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-circle {
+  width: 60px;
+  height: 60px;
+  border: 6px solid rgba(255, 0, 0, 0.25);
+  border-top: 6px solid red;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -33,36 +33,37 @@ export default function MovieRow({ title, query }) {
     rowRef.current.scrollBy({ left: 400, behavior: "smooth" });
   };
 
-  if (videos.length === 0) return <p>Loading {title}…</p>;
-
   return (
     <>
-      <div className="movie-row">
-        <h2>{title}</h2>
+      {/* Render ONLY when videos exist */}
+      {videos.length > 0 && (
+        <div className="movie-row">
+          <h2>{title}</h2>
 
-        <div className="row-wrapper">
-          <button className="arrow left" onClick={scrollLeft}>
-            ❮
-          </button>
+          <div className="row-wrapper">
+            <button className="arrow left" onClick={scrollLeft}>
+              ❮
+            </button>
 
-          <div className="row-container" ref={rowRef}>
-            {videos.map((video) => (
-              <div
-                key={video.id}
-                className="movie-card"
-                onClick={() => setActiveVideo(video.id)}
-              >
-                <img src={video.thumbnail} alt={video.title} />
-                <p>{video.title}</p>
-              </div>
-            ))}
+            <div className="row-container" ref={rowRef}>
+              {videos.map((video) => (
+                <div
+                  key={video.id}
+                  className="movie-card"
+                  onClick={() => setActiveVideo(video.id)}
+                >
+                  <img src={video.thumbnail} alt={video.title} />
+                  <p>{video.title}</p>
+                </div>
+              ))}
+            </div>
+
+            <button className="arrow right" onClick={scrollRight}>
+              ❯
+            </button>
           </div>
-
-          <button className="arrow right" onClick={scrollRight}>
-            ❯
-          </button>
         </div>
-      </div>
+      )}
 
       {/* MODAL PLAYER */}
       {activeVideo && (

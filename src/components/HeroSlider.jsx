@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../styles.css"; // optional styling
+import "../styles.css";
 
 export default function HeroSlider() {
   const [videos, setVideos] = useState([]);
@@ -11,6 +11,7 @@ export default function HeroSlider() {
       .then((res) => res.json())
       .then((data) => {
         if (!data.items) return;
+
         const videosData = data.items.map((item) => ({
           id: item.id.videoId,
           title: item.snippet.title,
@@ -18,6 +19,7 @@ export default function HeroSlider() {
             item.snippet.thumbnails.maxres?.url ||
             item.snippet.thumbnails.high?.url,
         }));
+
         setVideos(videosData);
       })
       .catch(console.error);
@@ -25,9 +27,11 @@ export default function HeroSlider() {
 
   useEffect(() => {
     if (videos.length === 0 || isPlaying) return;
+
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % videos.length);
     }, 6000);
+
     return () => clearInterval(interval);
   }, [videos, isPlaying]);
 
@@ -41,40 +45,44 @@ export default function HeroSlider() {
     setIndex((prev) => (prev + 1) % videos.length);
   };
 
-  if (videos.length === 0) return <p>Loading trailers…</p>;
-
-  const currentVideo = videos[index];
-
   return (
-    <section className="hero-slider">
-      <div className="hero-slide">
-        {!isPlaying ? (
-          <div className="thumbnail-wrapper" onClick={() => setIsPlaying(true)}>
-            <img
-              src={currentVideo.thumbnail}
-              alt={currentVideo.title}
-              className="hero-thumbnail"
-            />
-            <div className="play-button">▶</div>
+    <>
+      {/* Render ONLY when videos are ready */}
+      {videos.length > 0 && (
+        <section className="hero-slider">
+          <div className="hero-slide">
+            {!isPlaying ? (
+              <div
+                className="thumbnail-wrapper"
+                onClick={() => setIsPlaying(true)}
+              >
+                <img
+                  src={videos[index].thumbnail}
+                  alt={videos[index].title}
+                  className="hero-thumbnail"
+                />
+                <div className="play-button">▶</div>
+              </div>
+            ) : (
+              <iframe
+                className="hero-video"
+                src={`https://www.youtube.com/embed/${videos[index].id}?autoplay=1&rel=0`}
+                title={videos[index].title}
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+              />
+            )}
           </div>
-        ) : (
-          <iframe
-            className="hero-video"
-            src={`https://www.youtube.com/embed/${currentVideo.id}?autoplay=1&rel=0`}
-            title={currentVideo.title}
-            frameBorder="0"
-            allow="autoplay; encrypted-media"
-            allowFullScreen
-          />
-        )}
-      </div>
 
-      <button className="arrow left-arrow" onClick={prevSlide}>
-        &#10094;
-      </button>
-      <button className="arrow right-arrow" onClick={nextSlide}>
-        &#10095;
-      </button>
-    </section>
+          <button className="arrow left-arrow" onClick={prevSlide}>
+            &#10094;
+          </button>
+          <button className="arrow right-arrow" onClick={nextSlide}>
+            &#10095;
+          </button>
+        </section>
+      )}
+    </>
   );
 }

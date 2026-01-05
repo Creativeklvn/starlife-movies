@@ -3,10 +3,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  plugins: [react()],
-   base: "./", // <-- THIS fixes asset 404s
-  server: {
-    host: true,
-    port: 5173
-  }
+  base: "/", // <-- make sure this matches deployment
+  plugins: [react()]
 });
+

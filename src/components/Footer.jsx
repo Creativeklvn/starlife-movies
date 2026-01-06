@@ -18,19 +18,19 @@ export default function Footer() {
           <h3>Follow us</h3>
           <div className="social-icons">
 
-            <a href="https://facebook.com">
+            <a href="https://www.facebook.com/people/CK-Kelvin/61574225912359/">
             <div className="social-icons">
             <img src={facebookIcon} alt="facebook" />
             </div>
           </a>
 
-            <a href="https://instagram.com">
+            <a href="https://www.instagram.com/kelvinuneze">
             <div className="social-icons">
             <img src={instagramIcon} alt="instagram" />
             </div>
           </a>
 
-            <a href="https://tiktok.com">
+            <a href="https://www.tiktok.com/@creativeklvn">
             <div className="social-icons">
             <img src={tiktok} alt="tiktok" />
                         </div>

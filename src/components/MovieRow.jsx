@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles.css";
 
-export default function MovieRow({ title, query }) {
+export default function MovieRow({ title, query, onLoaded }) {
   const [videos, setVideos] = useState([]);
   const [activeVideo, setActiveVideo] = useState(null);
   const [error, setError] = useState(null);
@@ -13,12 +13,11 @@ export default function MovieRow({ title, query }) {
     if (!backendUrl) {
       console.error("❌ VITE_BACKEND_URL is not defined");
       setError("Backend not configured");
+      onLoaded && onLoaded(); // 🔔 still notify
       return;
     }
 
-    fetch(
-      `${backendUrl}/videos?q=${encodeURIComponent(query)}`
-    )
+    fetch(`${backendUrl}/videos?q=${encodeURIComponent(query)}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Server error: ${res.status}`);
@@ -43,8 +42,11 @@ export default function MovieRow({ title, query }) {
       .catch((err) => {
         console.error(err);
         setError("Failed to load videos");
+      })
+      .finally(() => {
+        onLoaded && onLoaded(); // 🔥 KEY LINE
       });
-  }, [query]);
+  }, [query, onLoaded]);
 
   const scrollLeft = () => {
     rowRef.current?.scrollBy({ left: -400, behavior: "smooth" });

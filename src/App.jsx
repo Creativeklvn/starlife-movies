@@ -9,7 +9,7 @@ import About from "./components/About";
 import "./styles.css";
 
 export default function App() {
-  const TOTAL_SECTIONS = 6; // ✅ HeroSlider + 5 MovieRows
+  const TOTAL_SECTIONS = 6; // HeroSlider + 5 MovieRows
   const [loadedCount, setLoadedCount] = useState(0);
 
   const handleLoaded = () => {
@@ -22,65 +22,43 @@ export default function App() {
     <>
       <Navbar />
 
-      {/* 🔴 GLOBAL LOADER */}
+      {/* 🔴 GLOBAL LOADER (OVERLAY, NOT BLOCKING) */}
       {loading && (
         <div className="app-loader">
           <div className="loader-circle"></div>
         </div>
       )}
 
-      {!loading && (
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                {/* ✅ NOW COUNTED */}
-                <HeroSlider onLoaded={handleLoaded} />
+      {/* ✅ ALWAYS RENDER CONTENT */}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <HeroSlider onLoaded={handleLoaded} />
 
-                <MovieRow
-                  title="Trending Movie Trailers 🔥"
-                  query="latest movie trailers"
-                  onLoaded={handleLoaded}
-                />
-                <MovieRow
-                  title="Action Movie Trailers 🔥"
-                  query="action movie trailers"
-                  onLoaded={handleLoaded}
-                />
-                <MovieRow
-                  title="Cartoon Movie Trailers 🔥"
-                  query="cartoon movie trailers"
-                  onLoaded={handleLoaded}
-                />
-                <MovieRow
-                  title="African Movie Trailers 🔥"
-                  query="african movie trailers"
-                  onLoaded={handleLoaded}
-                />
-                <MovieRow
-                  title="Trending TV Series 🔥"
-                  query="trending TV series"
-                  onLoaded={handleLoaded}
-                />
-              </>
-            }
-          />
+              <MovieRow title="Trending Movie Trailers 🔥" query="latest movie trailers" onLoaded={handleLoaded} />
+              <MovieRow title="Action Movie Trailers 🔥" query="action movie trailers" onLoaded={handleLoaded} />
+              <MovieRow title="Cartoon Movie Trailers 🔥" query="cartoon movie trailers" onLoaded={handleLoaded} />
+              <MovieRow title="African Movie Trailers 🔥" query="african movie trailers" onLoaded={handleLoaded} />
+              <MovieRow title="Trending TV Series 🔥" query="trending TV series" onLoaded={handleLoaded} />
+            </>
+          }
+        />
 
-          <Route path="/about" element={<About />} />
+        <Route path="/about" element={<About />} />
 
-          <Route
-            path="/trending"
-            element={
-              <MovieRow
-                title="Trending Movie Trailers 🔥"
-                query="latest movie trailers"
-                onLoaded={handleLoaded}
-              />
-            }
-          />
-        </Routes>
-      )}
+        <Route
+          path="/trending"
+          element={
+            <MovieRow
+              title="Trending Movie Trailers 🔥"
+              query="latest movie trailers"
+              onLoaded={handleLoaded}
+            />
+          }
+        />
+      </Routes>
 
       <Footer />
     </>

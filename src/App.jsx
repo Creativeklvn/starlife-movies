@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HeroSlider from "./components/HeroSlider";
@@ -9,53 +9,51 @@ import About from "./components/About";
 import "./styles.css";
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
+  const TOTAL_ROWS = 5; // number of MovieRow components
+  const [loadedRows, setLoadedRows] = useState(0);
 
-  useEffect(() => {
-    // simulate initial loading (API, assets, etc.)
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500); // adjust if needed
+  const handleRowLoaded = () => {
+    setLoadedRows((prev) => prev + 1);
+  };
 
-    return () => clearTimeout(timer);
-  }, []);
+  const loading = loadedRows < TOTAL_ROWS;
 
   return (
     <>
       <Navbar />
 
       {/* 🔴 GLOBAL LOADER */}
-      {loading ? (
+      {loading && (
         <div className="app-loader">
           <div className="loader-circle"></div>
         </div>
-      ) : (
+      )}
+
+      {!loading && (
         <Routes>
-          {/* Home Page */}
           <Route
             path="/"
             element={
               <>
                 <HeroSlider />
-                <MovieRow title="Trending Movie Trailers 🔥" query="latest movie trailers" />
-                <MovieRow title="Action Movie Trailers 🔥" query="action movie trailers" />
-                <MovieRow title="Cartoon Movie Trailers 🔥" query="cartoon movie trailers" />
-                <MovieRow title="African Movie Trailers 🔥" query="african movie trailers" />
-                <MovieRow title="Trending TV Series 🔥" query="trending TV series" />
+                <MovieRow title="Trending Movie Trailers 🔥" query="latest movie trailers" onLoaded={handleRowLoaded} />
+                <MovieRow title="Action Movie Trailers 🔥" query="action movie trailers" onLoaded={handleRowLoaded} />
+                <MovieRow title="Cartoon Movie Trailers 🔥" query="cartoon movie trailers" onLoaded={handleRowLoaded} />
+                <MovieRow title="African Movie Trailers 🔥" query="african movie trailers" onLoaded={handleRowLoaded} />
+                <MovieRow title="Trending TV Series 🔥" query="trending TV series" onLoaded={handleRowLoaded} />
               </>
             }
           />
 
-          {/* About Page */}
           <Route path="/about" element={<About />} />
 
-          {/* Trending Page */}
           <Route
             path="/trending"
             element={
               <MovieRow
                 title="Trending Movie Trailers 🔥"
                 query="latest movie trailers"
+                onLoaded={handleRowLoaded}
               />
             }
           />

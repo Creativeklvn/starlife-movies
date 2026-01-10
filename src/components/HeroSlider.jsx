@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../styles.css";
 
-export default function HeroSlider() {
+export default function HeroSlider({ onLoaded }) {
   const [videos, setVideos] = useState([]);
   const [index, setIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -13,6 +13,7 @@ export default function HeroSlider() {
     if (!backendUrl) {
       console.error("❌ VITE_BACKEND_URL is not defined");
       setError("Backend not configured");
+      onLoaded && onLoaded(); // 🔔 notify App
       return;
     }
 
@@ -46,8 +47,11 @@ export default function HeroSlider() {
       .catch((err) => {
         console.error(err);
         setError("Failed to load videos");
+      })
+      .finally(() => {
+        onLoaded && onLoaded(); // 🔥 CRITICAL LINE
       });
-  }, []);
+  }, [onLoaded]);
 
   useEffect(() => {
     if (videos.length === 0 || isPlaying) return;

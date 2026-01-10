@@ -19,7 +19,7 @@ app.get("/videos", async (req, res) => {
       return res.status(500).json({ error: "YouTube API key missing" });
     }
 
-    // ✅ Return cached result if exists
+    // ✅ Serve from cache
     const cached = cache.get(q);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
       return res.json(cached.data);
@@ -32,14 +32,17 @@ app.get("/videos", async (req, res) => {
     const response = await fetch(url);
     const data = await response.json();
 
+    // ✅ Graceful quota handling
     if (data.error) {
-      return res.status(403).json({
-        error: "YouTube quota exceeded or API error",
-        details: data.error,
+      console.error("YouTube API error:", data.error);
+
+      return res.json({
+        items: [],
+        quotaExceeded: true,
       });
     }
 
-    // ✅ Save to cache
+    // ✅ Cache success response
     cache.set(q, {
       data,
       timestamp: Date.now(),
@@ -48,7 +51,10 @@ app.get("/videos", async (req, res) => {
     res.json(data);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Server error" });
+    res.json({
+      items: [],
+      serverError: true,
+    });
   }
 });
 

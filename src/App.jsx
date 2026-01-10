@@ -9,14 +9,14 @@ import About from "./components/About";
 import "./styles.css";
 
 export default function App() {
-  const TOTAL_ROWS = 5; // number of MovieRow components
-  const [loadedRows, setLoadedRows] = useState(0);
+  const TOTAL_SECTIONS = 6; // ✅ HeroSlider + 5 MovieRows
+  const [loadedCount, setLoadedCount] = useState(0);
 
-  const handleRowLoaded = () => {
-    setLoadedRows((prev) => prev + 1);
+  const handleLoaded = () => {
+    setLoadedCount((prev) => prev + 1);
   };
 
-  const loading = loadedRows < TOTAL_ROWS;
+  const loading = loadedCount < TOTAL_SECTIONS;
 
   return (
     <>
@@ -35,12 +35,34 @@ export default function App() {
             path="/"
             element={
               <>
-                <HeroSlider />
-                <MovieRow title="Trending Movie Trailers 🔥" query="latest movie trailers" onLoaded={handleRowLoaded} />
-                <MovieRow title="Action Movie Trailers 🔥" query="action movie trailers" onLoaded={handleRowLoaded} />
-                <MovieRow title="Cartoon Movie Trailers 🔥" query="cartoon movie trailers" onLoaded={handleRowLoaded} />
-                <MovieRow title="African Movie Trailers 🔥" query="african movie trailers" onLoaded={handleRowLoaded} />
-                <MovieRow title="Trending TV Series 🔥" query="trending TV series" onLoaded={handleRowLoaded} />
+                {/* ✅ NOW COUNTED */}
+                <HeroSlider onLoaded={handleLoaded} />
+
+                <MovieRow
+                  title="Trending Movie Trailers 🔥"
+                  query="latest movie trailers"
+                  onLoaded={handleLoaded}
+                />
+                <MovieRow
+                  title="Action Movie Trailers 🔥"
+                  query="action movie trailers"
+                  onLoaded={handleLoaded}
+                />
+                <MovieRow
+                  title="Cartoon Movie Trailers 🔥"
+                  query="cartoon movie trailers"
+                  onLoaded={handleLoaded}
+                />
+                <MovieRow
+                  title="African Movie Trailers 🔥"
+                  query="african movie trailers"
+                  onLoaded={handleLoaded}
+                />
+                <MovieRow
+                  title="Trending TV Series 🔥"
+                  query="trending TV series"
+                  onLoaded={handleLoaded}
+                />
               </>
             }
           />
@@ -53,7 +75,7 @@ export default function App() {
               <MovieRow
                 title="Trending Movie Trailers 🔥"
                 query="latest movie trailers"
-                onLoaded={handleRowLoaded}
+                onLoaded={handleLoaded}
               />
             }
           />

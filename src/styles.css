@@ -166,8 +166,9 @@ align-content: center;
 }
 
 .movie-card p {
-  font-size: 1rem;
+  font-size: 0.8rem;
   margin-top: 6px;
+  color: #d4d4d4;
 }
 
 /* ARROWS */
@@ -538,4 +539,13 @@ align-content: center;
   to {
     transform: rotate(360deg);
   }
+}
+
+.app-loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }

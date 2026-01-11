@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+
 import Navbar from "./components/Navbar";
 import HeroSlider from "./components/HeroSlider";
 import MovieRow from "./components/MovieRow";
@@ -10,57 +11,49 @@ import "./styles.css";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [homepageData, setHomepageData] = useState({});
 
   useEffect(() => {
-    // simulate initial loading (API, assets, etc.)
-    const timer = setTimeout(() => {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    if (!backendUrl) {
+      console.error("❌ VITE_BACKEND_URL is not defined");
       setLoading(false);
-    }, 1500); // adjust if needed
+      return;
+    }
 
-    return () => clearTimeout(timer);
+    fetch(`${backendUrl}/homepage`)
+      .then((res) => res.json())
+      .then((data) => setHomepageData(data))
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
     <>
       <Navbar />
 
-      {/* 🔴 GLOBAL LOADER */}
-      {loading ? (
+      {loading && (
         <div className="app-loader">
           <div className="loader-circle"></div>
         </div>
-      ) : (
-        <Routes>
-          {/* Home Page */}
-          <Route
-            path="/"
-            element={
-              <>
-                <HeroSlider />
-                <MovieRow title="Trending Movie Trailers 🔥" query="latest movie trailers" />
-                <MovieRow title="Action Movie Trailers 🔥" query="action movie trailers" />
-                <MovieRow title="Cartoon Movie Trailers 🔥" query="cartoon movie trailers" />
-                <MovieRow title="African Movie Trailers 🔥" query="african movie trailers" />
-                <MovieRow title="Trending TV Series 🔥" query="trending TV series" />
-              </>
-            }
-          />
-
-          {/* About Page */}
-          <Route path="/about" element={<About />} />
-
-          {/* Trending Page */}
-          <Route
-            path="/trending"
-            element={
-              <MovieRow
-                title="Trending Movie Trailers 🔥"
-                query="latest movie trailers"
-              />
-            }
-          />
-        </Routes>
       )}
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <HeroSlider videos={homepageData.hero || []} />
+              <MovieRow title="Trending Movie Trailers 🔥" videos={homepageData.trending || []} />
+              <MovieRow title="Action Movie Trailers 🔥" videos={homepageData.action || []} />
+              <MovieRow title="Cartoon Movie Trailers 🔥" videos={homepageData.cartoon || []} />
+              <MovieRow title="African Movie Trailers 🔥" videos={homepageData.african || []} />
+              <MovieRow title="Trending TV Series 🔥" videos={homepageData.tvseries || []} />
+            </>
+          }
+        />
+        <Route path="/about" element={<About />} />
+      </Routes>
 
       <Footer />
     </>

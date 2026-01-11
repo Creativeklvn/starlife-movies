@@ -1,7 +1,7 @@
 import React from "react";
-import facebookIcon from "../assets/facebook.png";
+import linkedinIcon from "../assets/li.png";
 import instagramIcon from "../assets/instagram.png";
-import tiktok from "../assets/tiktok.png";
+import x from "../assets/x.png";
 import logo2 from "../assets/star.png";
 
 
@@ -18,21 +18,21 @@ export default function Footer() {
           <h3>Follow us</h3>
           <div className="social-icons">
 
-            <a href="https://facebook.com">
+            <a href="https://www.linkedin.com/in/kelvin-uneze-446a64144?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app">
             <div className="social-icons">
-            <img src={facebookIcon} alt="facebook" />
+            <img src={linkedinIcon} alt="linkedin" />
             </div>
           </a>
 
-            <a href="https://instagram.com">
+            <a href="https://www.instagram.com/kelvinuneze">
             <div className="social-icons">
             <img src={instagramIcon} alt="instagram" />
             </div>
           </a>
 
-            <a href="https://tiktok.com">
+            <a href="https://x.com/creative_klvn">
             <div className="social-icons">
-            <img src={tiktok} alt="tiktok" />
+            <img src={x} alt="x" />
                         </div>
           </a>
           </div>

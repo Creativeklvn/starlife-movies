@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import "../styles.css";
 
-export default function HeroSlider({ videos = [] }) {
+export default function HeroSlider({ videos }) {
   const [index, setIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Auto-slide
   useEffect(() => {
     if (videos.length === 0 || isPlaying) return;
 
@@ -32,10 +31,7 @@ export default function HeroSlider({ videos = [] }) {
     <section className="hero-slider">
       <div className="hero-slide">
         {!isPlaying ? (
-          <div
-            className="thumbnail-wrapper"
-            onClick={() => setIsPlaying(true)}
-          >
+          <div className="thumbnail-wrapper" onClick={() => setIsPlaying(true)}>
             <img
               src={videos[index].thumbnail}
               alt={videos[index].title}
@@ -45,7 +41,6 @@ export default function HeroSlider({ videos = [] }) {
           </div>
         ) : (
           <iframe
-            key={videos[index].id}
             className="hero-video"
             src={`https://www.youtube.com/embed/${videos[index].id}?autoplay=1&rel=0`}
             title={videos[index].title}

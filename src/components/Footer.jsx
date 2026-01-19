@@ -41,7 +41,7 @@ export default function Footer() {
         </div>
       </footer>
       <div className="footer-righ">
-          <span>@ Kelvin Uneze All rights reserved (2025)</span>
+          <span>@ Kelvin Uneze All rights reserved (2026)</span>
         </div>
     
     </footer>

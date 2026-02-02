@@ -1,4 +1,4 @@
-# 🎬 Starlife Movies
+# Starlife Movies
 
 **Starlife Movies** is a responsive web app for browsing and watching movie trailers through an interactive thumbnail slider.  
 It focuses on a clean UI, smooth navigation, and a simple trailer-watching experience built with pure frontend technologies.
@@ -6,7 +6,7 @@ It focuses on a clean UI, smooth navigation, and a simple trailer-watching exper
 
 ---
 
-## ✨ Features
+## Features
 
 - Movie thumbnail slider
 - Watch movie trailers directly

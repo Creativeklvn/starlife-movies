@@ -17,8 +17,9 @@ It focuses on a clean UI, smooth navigation, and a simple trailer-watching exper
 
 ---
 
+![Image](https://github.com/user-attachments/assets/74b47c71-a7ad-4ab4-8072-0e569e1408a9)
 
-No frameworks. No libraries. Pure frontend.
+
 
 ---
 
